@@ -1,0 +1,306 @@
+/* Section 3: How CSS works: A Look Behind the Scenes */
+
+/* 
+Section 3.12 
+    The Three Pillars to Write Good HTML and CSS:
+        - Responsive Design:
+            - Fluid Layouts
+            - Media Queries
+            - Responsive Images
+            - Correct Units
+            - Desktop-first vs Mobile-first
+        
+        - Maintainable and Scalable 
+            - Clean
+            - Easy to understand
+            - Growth
+            - Reusable
+            - How to organize files
+            - How to name classes
+            - How to structure HTML
+
+        - Web Performance
+            - Less HTTP requests
+            - Less code
+            - Compress code
+            - Use a CSS preprocessor
+            - Less images
+            - Compress images
+*/
+
+/* 
+Section 3.13 
+    What happens to CSS when we load up a WebPage?
+
+    Load HTML -> Parse HTML -> DOM is created
+    At "Parse HTML" -> Load CSS -> Parse CSS
+    At "Parse CSS": 
+        -> Resolve conflicting CSS selectors (cascade)
+        -> Process final CSS values
+    Then -> CSSOM is created    
+
+    After all of that happens -> Render Tree is created
+    Then -> Website rendering: The vissual formatting model
+    Finally -> Final rendered website
+*/
+
+/* 
+Section 3.14
+    How CSS is Parsed.
+    Part 1: The Cascade and Specificity
+    
+    CSS Rule structure:
+        - Selector
+        - Declaration Block
+        - Declaration
+        - Property
+        - Declared Value
+    
+    Cascade: Process of combining different stylesheets and resolving conflicts
+    between different CSS rules and declarations, when more than one rule 
+    applies to a certain element.
+
+    Declaration types:
+        - Author Declarations
+        - User Declarations
+        - Browser (user agent) Declarations
+
+    Importance (weight) > Specifity > Source Order
+
+    Importance:
+        1. User !important declarations
+        2. Author !important declarations
+        3. Author declarations
+        4. User declarations
+        5. Default browser declarations
+
+    When everything has the same importance, then jump to Specifity.
+
+    Specifity:
+        1. Inline Styles
+        2. IDs
+        3. Classes, Pseudo-Classes, Attributes
+        4. Elements, Pseudo-Elements
+
+    A trick to know the specificity of a declaration:
+    (inline, IDs, Classes, Elements)
+    Read as (0,0,0,0)
+
+    Example: 
+    1:
+       .button {
+            ...
+        }
+        (0,0,1,0)
+    2:    
+        nav#nav div.pull-right .button {
+            ...
+        }
+        (0,1,2,2)
+    3:
+        a {
+            ...
+        }
+        (0,0,0,1)
+    4:
+        #nav a.button:hover {
+            ...
+        }
+        (0,1,2,1)
+
+    So in this case, #2 has more specificity than the rest.
+
+    When everything has the same specificity, then jump to Source Order
+
+    Source Order:
+        The last declaration in the code will override all other declarations
+        and will be applied.
+
+    In order to have Maintainable and scalable code, remember:
+        - CSS declarations marked with !important have the highest priority;
+        - BUT, only use !important as a last resource. It's better to use 
+          correct specificities to keep more maintainable code;
+        - Inline styles will always have priority over styles in external stylesheets;
+        - A selector that contains 1 ID is more specific than one with 1000 classes;
+        - A selector that contains 1 class is more specific than one with 1000 elements;
+        - The universal selector * has no specificity value (0,0,0,0);
+        - Rely more on specificity than on the order of selectors;
+        - But, rely on order when using 3rd-party stylesheets - always put your author stylesheet last.
+*/
+
+/* 
+Section 3.16
+    CSS Value Processing
+
+    - Each property has an initial value, used if nothing is declared (and if there is no inheritance).
+    - Browsers specify a ROOT font-size for each page (usually 16px).
+    - Percentages and relative values are always converted to pixels.
+    - Percentages are measured relative to their parent's font-size, if used to specify font-size.
+    - Percentages are measured relative to their parent's width, if used to specify lengths.
+    - em are measured relative to their parent font-size, if used to specify font-size.
+    - rem are always measured relative to the document's root font-size.
+    - vh and vw are simply percentage measurements of the viewport's height and width.
+*/ 
+
+/* 
+Section 3.17
+    How CSS is Parsed: Inheritance
+
+    Every CSS property must have a value.
+    if (Is there a cascade value?) {
+        Specified value = Cascade value
+    } else if (Is the property inherited [specific to each property]) {
+        Specified value = Computed value of parent element
+        THIS IS INHRITANCE!
+    } else {
+        Specified value = Initial value (specific to each property)
+    }
+
+    - Inheritance passes the values for some specific properties from parents to children - More maintainable code.
+    - Properties related to text are inherited: font-family, font-size, color, etc.
+    - The computed value of a property is what gets inherited, not the declared value.
+    - Inheritance of a property only works if no one declares a value for that property.
+    - The "inherit" keyword forces inheritance of a centain property.
+    - The "initial" keyword resets a property to its initial value.
+     
+*/
+
+/* 
+Section 3.19
+    The Visual Formatting Model:
+        Algorithm that calculates boxes and determines the layout of theses
+        boxes, for each element in the render tree, in order to determine the
+        final layout of the page.
+    
+        - Dimensions of boxes: the box model.
+        - Box type: inline, block and inline-block.
+        - Positioning scheme: floats and positioning.
+        - Stacking contexts.
+        - Other elements in the render tree.
+        - Viewport size, dimensions of images, etc.
+
+    1. The Box Model:
+        - Content: text, images, etc.
+        - Padding: transparent area around the content, inside of the box.
+        - Border: goes around the padding and the content.
+        - Margin: space between boxes.
+        - Fill area: area that gets filled with background color or background image.
+
+    Heights and Widths:
+        Total width: RBorder + RPadding + specified width + LPadding + LBorder
+        Total height: TBorder + TPadding + specified height + BPadding + BBorder
+        Example: height = 0 + 20px + 100px + 20px + 0 = 140px
+
+    2. Box Types: Inline, Block-level and Inline-block
+        Block-level boxes:
+            - Elements formatted visually as blocks
+            - 100% of parent's width
+            - Verticall, one after another
+            - Box-model applies as showed
+
+                display: block;
+                display: flex;
+                display: list-item;
+                display: table;
+
+        Inline boxes:
+            - Content is destributed in lines
+            - Occupies only content's space
+            - No inline-breaks
+            - No heights and widths
+            - Paddings and margins only horizontal (left and right)
+
+                display: inline;
+
+        Inline-block boxes:
+            - A mix of block and inline
+            - Occupies only content's space
+            - No inline-breaks
+            - Box-model applies as showed
+
+                display: inline-block;
+
+    3. Positioning Schemes: Normal Flow, Absolute Positioning and Floats
+        Normal Flow:
+            - Default positioning scheme
+            - NOT floated
+            - NOT absolutely positioned
+            - Elements laid out according to their source order
+
+            Default
+                position: relative;
+
+        Floats:
+            - Element is removed from the normal flow
+            - Text and inline elements will wrap around the floated element
+            - The container will not adjust its height to the element
+
+                float: left;
+                float: right;
+
+        Absolute Positioning:
+            - Element is removed from the normal flow
+            - No impact on sorrounding content or elements
+            - We use top, bottom, left and right to offset the element from
+              its relatively positioned container.
+            
+                position: absolute;
+                position: fixed;
+
+    4. Stacking Contexts
+        Z-INDEX
+*/
+
+/* 
+Section 3.20
+    CSS Architecture, Components and BEM 
+        Maintainable and scalable code:
+            - Clean
+            - Modular
+            - Reusable
+            - Ready for growth
+
+        THINK -> BUILD -> ARCHITECT
+
+        1. Think about the layout of your webpage or web app before writing code.
+        2. Build your layout in HTML and CSS with a consistent structure for naming classes.
+        3. Create a logical architecture for your CSS with files and folders.
+
+        THINK:
+            Component-Driven Design:
+                - Modular building blocks that make up interfaces
+                - Held together by the layout of the page
+                - Re-usable across a project, and between different projects
+                - Independent, allowing us to use them anywhere on the page
+
+            Atomic Design:
+                - Atoms
+                - Molecules
+                - Organisms
+                - Templates
+                - Pages
+
+        BUILD:
+            BEM: Block Element Modifier
+                - BLOCK: standalone component that is meaningful on its own
+                - ELEMENT: part of a block that has no standalone meaning
+                - MODIFIER: a different version of a block or an element
+
+            Low-specifity BEM selectors:
+                .block {}
+                .block__element {}
+                .block__element--modifier {}
+
+        ARCHITECT:
+            The 7-1 Pattern:
+                7 different folders for partial Sass files, and 1 main Sass file
+                to import all other files into a compiled CSS stylesheet.
+            
+                - Base
+                - Components
+                - Layout
+                - Pages
+                - Themes
+                - Abstracts
+                - Vendors
+*/

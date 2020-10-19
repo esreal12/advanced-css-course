@@ -1,0 +1,70 @@
+/* 
+ Section 4.23
+    What is SASS and how does it work?
+        Sass is a CSS preprocessor, an extension of CSS that adds power and
+        elegance to the basic language.
+
+        SASS source code -> Sass Compiler -> Compiled CSS Code
+
+        - Variables: for reusable values such as colors, font-sizes, spacing, etc;
+        - Nesting: to nest selectors inside of one another, allowing us to write less code;
+        - Operators: for mathematical operations right inside of CSS;
+        - Partials and imports: to write CSS in different files and importing them all into one single file;
+        - Mixins: to write reusable pieces of CSS code;
+        - Functions: similar to mixins, with the difference that they produce a value that can be used later;
+        - Extends: to make different selectors inherit declarations that are common to all of them;
+        - Control directives: for writing complex code using conditionals and loops (not covered in this course).
+*/
+
+/* 
+Section 4.24
+    Notes on Nesting:
+        - If you have an element inside another element like:
+        <div>
+            <li></li>
+        </div>
+        is not necessary to add & before LI because Sass already knows its inside DIV.
+*/
+
+/* 
+Section 4.25
+    Mixins, Extends and Functions
+        
+    Mixins:     
+        @mixin name {
+            ...
+        }
+        
+        selector {
+            ...
+            @include name;
+        }
+
+        @mixin name ($parameter) {
+            declaration: $parameter;
+        }
+
+        selector {
+            declaration: property;
+            @include name ($parameter)
+        }
+
+    Functions:
+        @function divide ($a, $b) {
+            @return ($a / $b) * 1px;
+        }
+
+        selector {
+            margin: divide(60, 2);
+        }
+
+    Extends: Groups selectors with the same related code. Different than Mixins.
+        %btn-placeholder {
+            declarations;
+        }
+
+        selector {
+            @extends %btn-placeholder;
+        }
+        
+*/
