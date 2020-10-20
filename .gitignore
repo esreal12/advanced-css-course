@@ -1,0 +1,4 @@
+# Código gitignore para evitar procesar los directorios de las dependencias
+Trillo/starter/node_modules
+Natours/starter/node_modules
+*.DS_Store
